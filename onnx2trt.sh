@@ -1,0 +1,1 @@
+/usr/src/tensorrt/bin/trtexec --onnx=config/model.onnx --saveEngine=config/model.trt --fp16
