@@ -1,14 +1,13 @@
 # YOEO — You Only Encode Once
 A CNN for Embedded Object Detection and Semantic Segmentation
 
-This project is based upon [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) and will continuously be modified to our needs.
+# This project is based upon [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) and will continuously be modified to our needs.
 
 
 <img src="https://user-images.githubusercontent.com/15075613/131497667-c4e3f35f-db4b-4a53-b816-32dac6e1d85d.png" alt="example_image" height="150"/><img src="https://user-images.githubusercontent.com/15075613/131497744-e142c4ed-d69b-419a-96c3-39d871796081.png" alt="example_image" height="150"/><img src="https://user-images.githubusercontent.com/15075613/131498064-fc6545d9-8a1d-4953-a80b-52a3d2293c83.jpg" alt="example_image" height="150"/><img src="https://user-images.githubusercontent.com/15075613/131499391-e14a968a-b403-4210-b5f7-eb9be90a61db.png" alt="example_image" height="150"/>
 
 <img src="https://user-images.githubusercontent.com/15075613/131554376-1a0e5560-5aa6-462a-afb1-c0eeb0de5a4a.png" alt="example_image" height="150"/><img src="https://user-images.githubusercontent.com/15075613/131502742-bcc588b1-e766-4f0b-a2c4-897c14419971.png" alt="example_image" height="150"/><img src="https://user-images.githubusercontent.com/15075613/131503205-cbf47af6-8bfb-44f1-bbcb-37fdf54f139d.png" alt="example_image" height="150"/><img src="https://user-images.githubusercontent.com/15075613/131502830-e060e113-4abc-413a-bbdc-ffa6994b6a11.png" alt="example_image" height="150"/>
 
-<p align="center"><img src="https://user-images.githubusercontent.com/15075613/131499899-ce8c68b8-54a7-428b-abe9-0c1c49f7482d.png" alt="example_image" height="200"/></p>
 
 ## Installation
 ### Installing from source
@@ -48,54 +47,6 @@ poetry run yoeo-detect --images data/samples/
 
 <p align="center"><img src="https://user-images.githubusercontent.com/15075613/131503350-3e232e91-016b-4034-8bda-15e6619b0f98.png" width="480"\></p>
 
-## Train
-For argument descriptions have a look at `poetry run yoeo-train --h`
-
-#### Tensorboard
-Track training progress in Tensorboard:
-* Initialize training
-* Run the command below
-* Go to http://localhost:6006/
-
-```bash
-poetry run tensorboard --logdir='logs' --port=6006
-```
-
-Storing the logs on a slow drive possibly leads to a significant training speed decrease.
-
-You can adjust the log directory using `--logdir <path>` when running `tensorboard` and `yoeo-train`.
-
-## Train on Custom Dataset
-
-#### Classes
-Add class names to `data/custom/yoeo_names.yaml`.
-
-Run the following command to adapt the model file (cfg) to the new number of classes:
-
-```bash
-poetry run yoeo-custiomize-cfg -c config/yoeo.cfg -d config/custom.data -o config/yoeo-custom.cfg
-```
-
-This changes the layers of the model to fit the number of classes in your dataset.
-
-#### Image Folder
-Move the images of your dataset to `data/custom/images/`.
-
-#### YOLO Annotation Folder
-Move your yolo annotations to `data/custom/labels/`. The dataloader expects that the annotation file corresponding to the image `data/custom/images/train.jpg` has the path `data/custom/labels/train.txt`. Each row in the annotation file should define one bounding box, using the syntax `label_idx x_center y_center width height`. The coordinates should be scaled `[0, 1]`, and the `label_idx` should be zero-indexed and correspond to the row number of the class name in `data/custom/classes.names`.
-
-#### Segmentation Annotation Folder
-Move your segmentation annotations to `data/custom/yoeo_segmentations/`. The dataloader expects that the annotation file corresponding to the image `data/custom/images/train.jpg` has the path `data/custom/yoeo_segmentations/train.png`. The classes for each pixel are encoded via the class id.
-
-#### Define Train and Validation Sets
-In `data/custom/train.txt` and `data/custom/valid.txt`, add paths to images that will be used as train and validation data respectively.
-
-#### Train
-To train on the custom dataset run:
-
-```bash
-poetry run yoeo-train --model config/yoeo-custom.cfg --data config/custom.data
-```
 
 ## API
 
@@ -138,14 +89,24 @@ For more advanced usage look at the method's doc strings.
 To convert your YOEO model to an ONNX model, you can use the following command:
 
 ```bash
-poetry run yoeo-to-onnx config/yoeo.cfg  # Replace path with your .cfg file
+python3 yoeo/scripts/convertPyTorchModelToONNX.py config/yoeo.cfg weights/yoeo.pth # Replace path with your .cfg and .pth file
 ```
 
 For more information on ONNX, read the [ONNX runtime website](https://onnxruntime.ai/).
 
-### Convert ONNX model to OpenVino IR model
+### Testing the ONNX Model 
 
-After successful conversion of your YOEO model to an ONNX model using [this guide](#convert-your-yoeo-model-to-an-onnx-model), you can move on with the next conversion to an OpenVino IR model (intermediate representation) model using the following command:
+```bash
+python3 yoeo/run_onnx.py data/samples/frame6.png config/yoeo.onnx
+```
+#### Parameters:
+- `data/samples/frame6.png`: This is the path to the input image you want to test the model with.
+- `config/yoeo.onnx`: Make sure to replace this with the actual path to your ONNX model file.
+
+
+### Convert ONNX model to TensorRT
+
+After successful conversion of your YOEO model to an ONNX model using [this guide](#convert-your-yoeo-model-to-an-onnx-model), you can move on with the next conversion to an TensorRT model model using the following command:
 
 ```bash
 poetry run yoeo-onnx-to-openvino config/yoeo.onnx  # Replace path with your .onnx file
