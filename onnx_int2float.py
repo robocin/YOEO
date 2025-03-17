@@ -13,5 +13,5 @@ for node in model.graph.node:
                 attr.i = 1  # Change to FLOAT32 (1 is FLOAT32 in ONNX)
 
 # Save the modified model
-onnx.save(model, "model.onnx")
+onnx.save(model, "config/yoeo_fixed.onnx")
 print("Saved model_fixed.onnx with Cast nodes fixed.")

@@ -89,7 +89,7 @@ For more advanced usage look at the method's doc strings.
 To convert your YOEO model to an ONNX model, you can use the following command:
 
 ```bash
-python3 yoeo/scripts/convertPyTorchModelToONNX.py config/yoeo.cfg weights/yoeo.pth # Replace path with your .cfg and .pth file
+poetry run yoeo-to-onnx config/yoeo.cfg config/yoeo.pth # Replace path with your .cfg and .pth file
 ```
 
 For more information on ONNX, read the [ONNX runtime website](https://onnxruntime.ai/).
@@ -97,22 +97,29 @@ For more information on ONNX, read the [ONNX runtime website](https://onnxruntim
 ### Testing the ONNX Model 
 
 ```bash
-python3 yoeo/run_onnx.py data/samples/frame6.png config/yoeo.onnx
+python3 yoeo/run_onnx.py data/samples/frame6554.jpg config/yoeo.onnx
 ```
 #### Parameters:
-- `data/samples/frame6.png`: This is the path to the input image you want to test the model with.
+- `data/samples/frame6554.jpg`: This is the path to the input image you want to test the model with.
 - `config/yoeo.onnx`: Make sure to replace this with the actual path to your ONNX model file.
 
 
 ### Convert ONNX model to TensorRT
 
-After successful conversion of your YOEO model to an ONNX model using [this guide](#convert-your-yoeo-model-to-an-onnx-model), you can move on with the next conversion to an TensorRT model model using the following command:
+After successful conversion of your YOEO model to an ONNX model using [this guide](#convert-your-yoeo-model-to-an-onnx-model), you can move on with the next conversion to an TensorRT model model using the following command.  However, before converting to TensorRT, you need to modify the ONNX model due to compatibility issues with certain operations, the a `Cast` operation from `float` to `int`, which TensorRT does not support.
+
+Here is how you can work around this issue:
 
 ```bash
-poetry run yoeo-onnx-to-openvino config/yoeo.onnx  # Replace path with your .onnx file
+python3 onnx_int2float.py 
 ```
 
-For more information on OpenVino, read the [OpenVino documentation](https://docs.openvino.ai).
+ The onnx2trt.sh script invokes the trtexec, which is a tool provided by TensorRT for converting ONNX models into optimized TensorRT engines. Use the following command to convert the yoeo_fixed.onnx model to TensorRT:
+```bash
+$ sh onnx2trt.sh
+```
+
+For more information on trtexec, read the [NVIDIA documentation](https://docs.nvidia.com/deeplearning/tensorrt/latest/reference/command-line-programs.html).
 
 ## Publication
 
