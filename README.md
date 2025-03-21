@@ -97,7 +97,7 @@ For more information on ONNX, read the [ONNX runtime website](https://onnxruntim
 ### Testing the ONNX Model 
 
 ```bash
-python3 yoeo/run_onnx.py data/samples/frame6554.jpg config/yoeo.onnx
+poetry run yoeo-run-onnx data/samples/frame6554.jpg config/yoeo.onnx 
 ```
 #### Parameters:
 - `data/samples/frame6554.jpg`: This is the path to the input image you want to test the model with.
@@ -111,8 +111,12 @@ After successful conversion of your YOEO model to an ONNX model using [this guid
 Here is how you can work around this issue:
 
 ```bash
-python3 onnx_int2float.py 
+poetry run yoeo-fix-cast config/yoeo.onnx config/yoeo_fixed.onnx
 ```
+#### Parameters:
+- `config/yoeo.onnx`: Make sure to replace this with the actual path to your ONNX model to be fixed.
+- `config/yoeo_fixed.onnx`: Path to save the fixed .onnx model.
+
 
  The onnx2trt.sh script invokes the trtexec, which is a tool provided by TensorRT for converting ONNX models into optimized TensorRT engines. Use the following command to convert the yoeo_fixed.onnx model to TensorRT:
 ```bash
