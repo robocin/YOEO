@@ -9,7 +9,7 @@ from glob import glob
 
 # Paths
 image_dir = "/home/drones/Documents/YOEO/data/samples"
-trt_model_path = "/home/drones/Documents/YOEO/config/model2.trt"
+trt_model_path = "/home/drones/Documents/YOEO/config/model.trt"
 outputs_path = "/home/drones/Documents/YOEO/data/outputs"
 
 # Get all .jpg and .png files in the directory

@@ -17,8 +17,7 @@ def fix_cast(model_path, output_path):
     onnx.save(model, output_path)
     print(f"Saved model with fixed Cast nodes to {output_path}.")
 
-def run():
-    # Argument parsing
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fix Cast nodes in an ONNX model.")
     parser.add_argument("model_path", type=str, help="Path to the input ONNX model.")
     parser.add_argument("output_path", type=str, help="Path to save the fixed ONNX model.")

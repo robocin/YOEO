@@ -36,7 +36,7 @@ def inference(image_path, onnx_path):
     cv2.imwrite("segmented_result_onnx.jpg", result_image)
 
 # Argument parser for CLI
-def run():
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Inference test with an ONNX model.")
     parser.add_argument("image_path", type=str, help="Path to the input image")
     parser.add_argument("onnx_path", type=str, help="Path to the ONNX model")
